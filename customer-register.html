@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Registration - US001</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <h2>ASP Bank - Customer Registration</h2>
+    <div>
+        <a href="index.html">Home</a>
+        <a href="customer-login.html">Login</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Customer Self Registration</h2>
+    <form onsubmit="return registerCustomer()">
+        <input type="text" id="ssnId" placeholder="Customer SSN Id" maxlength="20" required>
+        <input type="text" id="firstName" placeholder="First Name (max 50 chars)" maxlength="50" required>
+        <input type="text" id="lastName" placeholder="Last Name (max 50 chars)" maxlength="50" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password (max 30 chars)" maxlength="30" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" maxlength="30" required>
+        <textarea id="address" placeholder="Address (max 100 chars)" maxlength="100" required></textarea>
+        <input type="text" id="contact" placeholder="Contact Number (10 digits)" maxlength="10" required>
+
+        <button type="submit">Register</button>
+    </form>
+    <a href="index.html">Back</a>
+</div>
+
+<script>
+function registerCustomer() {
+    const ssnId = document.getElementById('ssnId').value.trim();
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const address = document.getElementById('address').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+
+    if (password !== confirmPassword) {
+        alert('Password and Confirm Password must match');
+        return false;
+    }
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+        alert('Password must be 8+ chars with Upper, Number, Special char');
+        return false;
+    }
+    if (firstName.length > 50 || lastName.length > 50 || address.length > 100 || contact.length !== 10 || !/^\d{10}$/.test(contact)) {
+        alert('Check field lengths/formats');
+        return false;
+    }
+
+    let customers = JSON.parse(localStorage.getItem('customers') || '[]');
+    const customerId = 'CUST' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 1000);
+    const accountNumber = 'ACC' + Date.now().toString().slice(-6);
+    
+    const newCustomer = {
+        ssnId,
+        firstName,
+        lastName,
+        email,
+        password,
+        address,
+        contact,
+        customerId,
+        accountNumber,
+        balance: 0,
+        transactions: []
+    };
+
+    customers.push(newCustomer);
+    localStorage.setItem('customers', JSON.stringify(customers));
+
+    const popupDetails = `Customer Registration successful.<br><br>
+        Customer ID: ${customerId}<br>
+        Name: ${firstName} ${lastName}<br>
+        Email: ${email}`;
+    
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+    popup.style.display = 'flex';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <h2 style="color: green;">Customer Registration successful.</h2>
+            <div style="text-align: left; background: #f0f8ff; padding: 15px; border-radius: 5px;">
+                ${popupDetails}
+            </div>
+            <button onclick="this.parentElement.parentElement.remove(); window.location.href='customer-login.html'">Login Now</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+
+    return false;
+}
+</script>
+</body>
+</html>

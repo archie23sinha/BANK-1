@@ -1,33 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Customer Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav class="navbar">
-    <h2>Dashboard</h2>
-    <div>
+    <div class="logo">
+        <span class="logo-icon">🏦</span>
+        ASP Bank
+    </div>
+    <div class="nav-links">
         <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="#" onclick="logout()">Logout</a>
     </div>
 </nav>
 
-<div class="container">
-    <h2>Welcome 🎉</h2>
-
-    <div class="card">
-        👨 Employee Registered
+<div class="dashboard-container" id="mainDashboard" style="display: none;">
+    <h2>Welcome Back!</h2>
+    
+    <div class="card balance-card">
+        <h3>Current Balance</h3>
+        <h1 id="currentBalance">₹0.00</h1>
+        <p id="accountDetails">Account: Loading...</p>
     </div>
 
-    <div class="card">
-        👤 Customer Module Ready
+    <div class="operations-grid">
+        <div class="operation-card card">
+            <h3>💸 Withdraw</h3>
+            <p>Min ₹1000 | Keep ₹500 balance</p>
+            <input type="number" id="withdrawAmount" placeholder="Enter amount" step="0.01">
+            <button onclick="handleWithdraw()">Withdraw</button>
+        </div>
+
+        <div class="operation-card card">
+            <h3>💰 Deposit</h3>
+            <p>Deposit to your account</p>
+            <input type="number" id="depositAmount" placeholder="Enter amount" step="0.01">
+            <button onclick="handleDeposit()">Deposit</button>
+        </div>
     </div>
 
-    <div class="card">
-        🔐 Login Successful
+    <div class="card transactions-card">
+        <h3>Recent Transactions</h3>
+        <div id="transactionsList">Loading...</div>
     </div>
 </div>
+
+<div id="loginPrompt" class="container" style="text-align: center;">
+    <h2>Please Login to Access Dashboard</h2>
+    <a href="customer-login.html" class="login-btn">Go to Login</a>
+</div>
+
+<!-- Popups -->
+<div id="successPopup" class="popup">
+    <div class="popup-content">
+        <h2 id="popupTitle" style="color: green;">Success</h2>
+        <p id="popupMessage"></p>
+        <button onclick="this.parentElement.parentElement.style.display='none'">Close</button>
+    </div>
+</div>
+
+<div id="errorPopup" class="popup">
+    <div class="popup-content">
+        <h2 style="color: red;">Error</h2>
+        <p id="errorMessage"></p>
+        <button onclick="this.parentElement.parentElement.style.display='none'">Close</button>
+    </div>
+</div>
+
+<script src="customer.js"></script>
+<script>
+window.onload = initDashboard;
+</script>
 
 </body>
 </html>
